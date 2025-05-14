@@ -1,7 +1,7 @@
 import User from "./userModel.js";
 
-export const createUser = async (username, email) => {
-  const user = new User({ username, email });
+export const createUser = async (username, email, location) => {
+  const user = new User({ username, email, location });
   const result = await user.save();
   console.log("User created:", result);
 };

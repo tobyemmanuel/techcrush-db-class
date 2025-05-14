@@ -17,9 +17,9 @@ const startServer = async () => {
 
   // Create user endpoint
   app.post("/users", async (req, res) => {
-    const { username, email } = req.body;
+    const { username, email, location } = req.body;
     try {
-      await createUser(username, email);
+      await createUser(username, email, location);
       res.status(201).json({message: "User created"});
     } catch (error) {
       res.status(400).json({ error: error.message });
