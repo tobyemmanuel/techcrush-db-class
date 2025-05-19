@@ -3,14 +3,18 @@ import Book from "../models/book.model.js";
 // Create a new book
 export const createBook = async (req, res) => {
   const { title, year, author, summary } = req.body;
+  
+  const file = req.file;
+  const filePath = file ? file.path : null;
+  const fileName = file ? file.filename : null;
 
-  const book = await Book.create({ title, year, author, summary });
+  const book = await Book.create({ title, year, author, summary, filePath, fileName });
 
   if (!book) {
     return res.status(400).json({
       status: false,
       message: "Could not create the book",
-      data: [],
+      data: null,
     });
   }
 
@@ -23,9 +27,13 @@ export const createBook = async (req, res) => {
 
 //get all books
 export const getAllBooks = async (req, res) => {
-  const books = await Book.findAll();
+  const LIMIT = 5;
+  const page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * LIMIT;
+  const books = await Book.findAndCountAll({ limit: LIMIT, offset });
+  // const books = await Book.findAll();
 
-  if (!books) {
+  if (books.count === 0) {
     return res.status(400).json({
       status: false,
       message: "Could not get the books",
@@ -36,7 +44,12 @@ export const getAllBooks = async (req, res) => {
   return res.status(200).json({
     status: true,
     message: "Books retrieved successfully",
-    data: books,
+    data: {
+      books: books.rows,
+      total: books.count,
+      pages: Math.ceil(books.count / LIMIT),
+      page,
+    },
   });
 };
 
@@ -72,7 +85,7 @@ export const updateBook = async (req, res) => {
     });
   }
 
-  await book.update();
+  await book.update(req.body);
 
   return res.status(200).json({
     status: true,

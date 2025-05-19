@@ -8,10 +8,11 @@ import {
 } from "../controllers/book.controller.js";
 import { createBookValidator, validationResultMiddleware } from "../middleware/validator.js";
 import { protectedAction } from "../middleware/protected.js";
+import { upload } from "../config/storage.config.js";
 
 const router = express.Router();
 
-router.post("/", createBookValidator, validationResultMiddleware, createBook);
+router.post("/", upload.single('file'), createBookValidator, validationResultMiddleware, createBook);
 
 router.get("/", getAllBooks);
 

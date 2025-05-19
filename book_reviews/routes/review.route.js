@@ -1,29 +1,32 @@
 import express from "express";
+import {
+  createReview,
+  getAllReviews,
+  getReview,
+  updateReview,
+  deleteReview,
+} from "../controllers/review.controller.js";
+
+import {
+  createReviewValidator,
+  validationResultMiddleware,
+} from "../middleware/validator.js";
 
 const router = express.Router();
 
-router.post("/:bookId", (req, res) => {
-  // create a review for a book
-});
+router.post(
+  "/:bookId",
+  createReviewValidator,
+  validationResultMiddleware,
+  createReview
+);
 
-router.get("/:bookId", (req, res) => {
-  // get all the reviews for a book
-});
+router.get("/:bookId", getAllReviews);
 
-router.get("/:bookId/:reviewId", (req, res) => {
-  // get a review for a book
-});
+router.get("/review/:reviewId", getReview);
 
-router.get("/review/:reviewId", (req, res) => {
-  // get a review
-});
+router.put("/review/:reviewId", updateReview);
 
-router.put("/review/:reviewId", (req, res) => {
-  // edit a review
-});
-
-router.delete("/review/:reviewId", (req, res) => {
-  // delete a review
-});
+router.delete("/review/:reviewId", deleteReview);
 
 export default router;
