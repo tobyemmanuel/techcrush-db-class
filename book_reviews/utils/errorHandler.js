@@ -9,7 +9,7 @@ export function APIResponseHandler(
   return errorResponse(statusCode, message, data);
 }
 
-export function successResponse(res, statusCode, message, data) {
+export function successResponse(res, statusCode, message, data=[]) {
   res.status(statusCode).json({
     status: true,
     message: message,
@@ -17,9 +17,9 @@ export function successResponse(res, statusCode, message, data) {
   });
 }
 
-export function errorResponse(res, statusCode, message, data) {
+export function errorResponse(res, statusCode, message, data=[]) {
   res.status(statusCode).json({
-    status: true,
+    status: false,
     message: message,
     data: data,
   });
