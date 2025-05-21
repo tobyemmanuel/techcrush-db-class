@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { sendEmail } from "../services/email.service.js";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ export const createUser = async (req, res) => {
   const hashed_password = await bcrypt.hashSync(password, 10);
 
   const user = await User.create({ email, name, password: hashed_password });
-
+  
   if (!user) {
     return res.status(400).json({
       status: false,
@@ -30,6 +31,8 @@ export const createUser = async (req, res) => {
       data: [],
     });
   }
+
+  sendEmail(email, "Welcome to Book Reviews", "Thank you for signing up!");
 
   return res.status(201).json({
     status: true,
