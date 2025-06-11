@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import bookRoutes from "./routes/book.route.js";
 import reviewRoutes from "./routes/review.route.js";
 import userRoutes from "./routes/user.route.js";
@@ -8,11 +9,13 @@ import { sequelize } from "./config/db.config.js";
 import path from "node:path";
 import fs from "node:fs";
 import { errorResponse } from "./utils/errorHandler.js";
+// import { sendSMSToUser } from "./utils/cronHandler.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
@@ -43,6 +46,7 @@ sequelize
   .sync({ alter: true })
   .then(() => {
     app.listen(PORT, () => {
+      // sendSMSToUser("0 0 * * *"); // Schedule to run every day at midnight
       console.log("Server is running on port: ", PORT);
     });
   })
